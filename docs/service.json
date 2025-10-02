@@ -1,0 +1,192 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Service API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/services": {
+      "get": {
+        "tags": ["services"],
+        "summary": "Get all services",
+        "responses": {
+          "200": {
+            "description": "A list of services",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Service" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["services"],
+        "summary": "Create a new service",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "service_name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "image": { "type": "string", "format": "binary" },
+                  "status": { "type": "string", "enum": ["active", "inactive"] }
+                },
+                "required": ["service_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Service created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Service" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/services/{id}": {
+      "get": {
+        "tags": ["services"],
+        "summary": "Get a service by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A service",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Service" }
+              }
+            }
+          },
+          "404": { "description": "Service not found" }
+        }
+      },
+      "put": {
+        "tags": ["services"],
+        "summary": "Update a service",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "service_name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "image": { "type": "string", "format": "binary" },
+                  "status": { "type": "string", "enum": ["active", "inactive"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Service" }
+              }
+            }
+          },
+          "404": { "description": "Service not found" }
+        }
+      },
+      "delete": {
+        "tags": ["services"],
+        "summary": "Delete a service",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Service deleted" },
+          "404": { "description": "Service not found" }
+        }
+      }
+    },
+    "/api/services/count": {
+      "get": {
+        "tags": ["services"],
+        "summary": "Get total services count",
+        "responses": {
+          "200": {
+            "description": "Total count",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "services",
+      "description": "APIs related to services CRUD and count"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Service": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "service_name": { "type": "string" },
+          "description": { "type": "string" },
+          "image": { "type": "string" },
+          "status": { "type": "string", "enum": ["active", "inactive"] },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ServiceInput": {
+        "type": "object",
+        "properties": {
+          "service_name": { "type": "string" },
+          "description": { "type": "string" },
+          "image": { "type": "string" },
+          "status": { "type": "string", "enum": ["active", "inactive"] }
+        },
+        "required": ["service_name"]
+      }
+    }
+  }
+}
