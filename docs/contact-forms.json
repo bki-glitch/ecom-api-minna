@@ -1,0 +1,92 @@
+{
+  "paths": {
+    "/api/contact-forms": {
+      "get": {
+        "tags": ["contact-forms"],
+        "summary": "List contact form submissions",
+        "responses": {
+          "200": {
+            "description": "List retrieved",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/ContactForm" } }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["contact-forms"],
+        "summary": "Create a contact form submission",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": { "type": "string" },
+                  "last_name": { "type": "string" },
+                  "contact_number": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "message": { "type": "string" },
+                  "status": { "type": "string", "enum": ["unread","read","replied"] }
+                },
+                "required": ["first_name","last_name","email","message"]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/api/contact-forms/{id}": {
+      "get": {
+        "tags": ["contact-forms"],
+        "summary": "Get a contact form submission",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ContactForm" } } } }, "404": { "description": "Not found" } }
+      },
+      "put": {
+        "tags": ["contact-forms"],
+        "summary": "Update a contact submission",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" }, "400": { "description": "Bad request" }, "404": { "description": "Not found" } }
+      },
+      "delete": {
+        "tags": ["contact-forms"],
+        "summary": "Delete a contact submission",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" }, "404": { "description": "Not found" } }
+      }
+    },
+    "/api/contact-forms/{id}/status": {
+      "post": {
+        "tags": ["contact-forms"],
+        "summary": "Change status of a contact submission",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "string", "enum": ["unread","read","replied"] } }, "required": ["status"] } } } },
+        "responses": { "200": { "description": "Status changed" }, "400": { "description": "Bad request" }, "404": { "description": "Not found" } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ContactForm": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "first_name": { "type": "string" },
+          "last_name": { "type": "string" },
+          "contact_number": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "message": { "type": "string" },
+          "status": { "type": "string", "enum": ["unread","read","replied"] },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

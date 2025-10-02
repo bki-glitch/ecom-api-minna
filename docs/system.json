@@ -1,0 +1,10 @@
+{
+  "paths": {
+    "/api/sync-db": {
+      "post": {
+        "summary": "Sync database tables",
+        "responses": {"200": {"description": "Database synced"}}
+      }
+    }
+  }
+}
